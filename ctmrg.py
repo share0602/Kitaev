@@ -213,7 +213,7 @@ def create_density_matrix(c1, c2, c3, c4):
     c2c3c4 = np.tensordot(c2c3, c4, axes=([2, 3], [2, 3]))  # c2c3c4_{b j e m} = c2c3_{b j d l} * c4_{e m d l}
     return np.tensordot(c1, c2c3c4, axes=([2, 3], [2, 3]))  # dm_{a i b j} = c1_{a i e m} * c2c3c4_{b j e m}
 
-
+'''
 def create_projector(density_matrix, dim):
     """Returns projector used for renormalization of corner matrix and transfer matrix."""
 
@@ -229,6 +229,13 @@ def create_projector(density_matrix, dim):
     projector = np.fliplr(projector)
     return np.conj(projector[:, :dim].reshape((da, di, -1)))
 
+'''
+def create_projector_operator(dim, c1, c4):
+    m1 = np.tensordot(c1, np.conj(c1), axes=(0, 0))
+    m2 = np.tensordot(c4, np.conj(c4), axes=(1, 1))
+    w, u = np.linalg.eigh(m1 + m2)
+    u = np.fliplr(u)
+    return np.conj(u[:, :dim])
 
 def corner_extension(corner, tm1, tm2, weight):
     """
